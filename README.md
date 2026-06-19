@@ -1,163 +1,172 @@
-# MoodTune 🎵
+# 🎵 MoodTune
 
-An emotion-based music recommendation chatbot. Tell MoodTune how you feel, and it uses AI to detect your emotion and recommend music that matches your mood.
+**An AI-powered full stack chatbot that detects your emotion from text and recommends music to match your mood.**
 
-## Tech Stack
+![Python](https://img.shields.io/badge/Python-3.13-blue?logo=python&logoColor=white)
+![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.110-009688?logo=fastapi&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791?logo=postgresql&logoColor=white)
+![HuggingFace](https://img.shields.io/badge/🤗-Transformers-FFD21E)
+![JWT](https://img.shields.io/badge/Auth-JWT-black)
+![License](https://img.shields.io/badge/License-MIT-lightgrey)
+
+---
+
+## 📖 Overview
+
+MoodTune is a full stack web application where a user signs up, types how they're feeling, and an AI model detects their emotion in real time and recommends music to match it. Every conversation is saved to a personal mood history, visualized on an analytics dashboard, and favourite songs can be saved for later.
+
+Built as a final year engineering project to demonstrate a complete, production-style full stack architecture — frontend, backend, database, authentication, and a deep learning model — all working together.
+
+---
+
+## ✨ Features
+
+- 🔐 **Secure authentication** — signup/login with JWT tokens and bcrypt-hashed passwords
+- 🤖 **AI emotion detection** — HuggingFace transformer model classifies text into 7 emotions
+- 🎵 **Smart music recommendations** — each emotion maps to a curated set of songs
+- 📜 **Mood history** — every conversation is logged with timestamp and confidence score
+- 📊 **Analytics dashboard** — visual breakdown of emotional trends over time
+- ❤️ **Favourites** — save songs you like for quick access later
+- 🎨 **Clean, dark-themed UI** — built with React and Tailwind CSS
+
+---
+
+## 📸 Screenshots
+
+### Sign up
+<img src="screenshots/login.png" width="700" alt="Sign up page">
+
+### Chat — emotion detection in action
+<img src="screenshots/chat.png" width="700" alt="Chat page with emotion detected and songs recommended">
+
+### Mood history
+<img src="screenshots/history.png" width="700" alt="History page showing past mood entries">
+
+### Analytics dashboard
+<img src="screenshots/analytics.png" width="700" alt="Analytics page with emotion breakdown chart">
+
+### Favourites
+<img src="screenshots/favourites.png" width="700" alt="Favourites page with saved songs">
+
+---
+
+## 🛠️ Tech Stack
 
 | Layer | Technology |
-|-------|-----------|
-| Frontend | React.js + Tailwind CSS + Vite |
-| Backend | FastAPI (Python) |
-| Database | PostgreSQL |
-| Auth | JWT (JSON Web Tokens) |
-| AI Model | HuggingFace `j-hartmann/emotion-english-distilroberta-base` |
-| HTTP Client | Axios |
+|---|---|
+| **Frontend** | React.js, Tailwind CSS, Axios |
+| **Backend** | FastAPI (Python) |
+| **Database** | PostgreSQL + SQLAlchemy ORM |
+| **Authentication** | JWT + bcrypt password hashing |
+| **AI / NLP** | HuggingFace Transformers — `j-hartmann/emotion-english-distilroberta-base` |
+| **Charts** | Recharts |
 
-## Features
+---
 
-- **Emotion Detection** — AI analyzes your message and detects one of 7 emotions (joy, sadness, anger, fear, surprise, disgust, neutral)
-- **Music Recommendations** — 5 curated song suggestions per emotion with YouTube links
-- **Mood History** — Every chat interaction is saved automatically
-- **Favourites** — Save songs you love for later
-- **Analytics** — View session stats and emotion breakdown chart
-- **JWT Authentication** — Secure login/signup with 24-hour tokens
+## 🏗️ Architecture
 
-## Project Structure
+```
+┌──────────────────────┐
+│      FRONTEND        │
+│  React + Tailwind     │
+└──────────┬────────────┘
+           │ REST API (Axios + JWT)
+           ▼
+┌──────────────────────┐
+│       BACKEND         │
+│   FastAPI + Python    │
+└──────┬────────┬───────┘
+       │        │
+       ▼        ▼
+┌────────────┐ ┌───────────────┐
+│ PostgreSQL │ │  AI Layer     │
+│  Database  │ │  HuggingFace  │
+└────────────┘ └───────────────┘
+```
+
+---
+
+## 📁 Project Structure
 
 ```
 moodtune/
 ├── backend/
-│   ├── main.py          # FastAPI app & routes
-│   ├── auth.py          # JWT & password hashing
-│   ├── models.py        # SQLAlchemy models
-│   ├── database.py      # DB connection
-│   ├── emotion.py       # HuggingFace emotion detection
-│   ├── music.py         # Emotion → song mapping
+│   ├── main.py            # FastAPI app & routes
+│   ├── auth.py             # JWT auth + password hashing
+│   ├── models.py            # SQLAlchemy models
+│   ├── database.py          # DB connection
+│   ├── emotion.py           # Emotion detection logic
+│   ├── music.py              # Emotion → music mapping
 │   └── requirements.txt
 ├── frontend/
 │   ├── src/
-│   │   ├── App.jsx
-│   │   ├── pages/       # Login, Signup, Chat, History, Analytics, Favourites
-│   │   ├── components/  # Sidebar, SongCard, MoodChart
-│   │   └── api/         # Axios setup
+│   │   ├── pages/            # Login, Signup, Chat, History, Analytics, Favourites
+│   │   ├── components/       # Sidebar, SongCard, MoodChart, ProtectedRoute
+│   │   └── api/axios.js
 │   └── package.json
 └── README.md
 ```
 
-## Prerequisites
+---
 
-- Python 3.9+
-- Node.js 18+
+## ⚙️ Getting Started
+
+### Prerequisites
+- Python 3.10+
+- Node.js (LTS)
 - PostgreSQL
 
-## Database Setup
-
-1. Install and start PostgreSQL
-2. Create the database:
-
+### 1. Database
 ```sql
 CREATE DATABASE moodtune;
 ```
 
-3. Tables are created automatically when the backend starts.
-
-## Backend Setup
-
+### 2. Backend
 ```bash
 cd backend
 pip install -r requirements.txt
-```
-
-Create a `.env` file in `backend/`:
-
-```env
-DATABASE_URL=postgresql://postgres:1234@localhost:5432/moodtune
-SECRET_KEY=your_secret_key_here
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=1440
-```
-
-Start the server:
-
-```bash
 uvicorn main:app --reload
 ```
 
-API runs at `http://localhost:8000`
-
-> **Note:** The first chat request downloads the HuggingFace emotion model (~300MB). This may take a minute.
-
-## Frontend Setup
-
+### 3. Frontend
 ```bash
 cd frontend
 npm install
-```
-
-Create a `.env` file in `frontend/`:
-
-```env
-VITE_API_URL=http://localhost:8000
-```
-
-Start the dev server:
-
-```bash
 npm run dev
 ```
 
-App runs at `http://localhost:5173`
+Then open **http://localhost:5173**, sign up, log in, and start chatting 🎵
 
-## API Endpoints
+---
 
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| POST | `/auth/signup` | No | Register new user |
-| POST | `/auth/login` | No | Login, returns JWT |
-| POST | `/chat` | Yes | Detect emotion & get music |
-| GET | `/history` | Yes | Get mood history |
-| DELETE | `/history/{id}` | Yes | Delete history entry |
-| POST | `/favourites` | Yes | Save a song |
-| GET | `/favourites` | Yes | Get saved songs |
-| DELETE | `/favourites/{id}` | Yes | Remove a favourite |
-| GET | `/analytics` | Yes | Get mood analytics |
+## 🧠 How It Works
 
-## Emotion → Music Mapping
+1. User types how they feel into the chat
+2. Text is sent to the FastAPI backend
+3. A HuggingFace transformer model classifies the emotion (joy, sadness, anger, fear, surprise, disgust, or neutral)
+4. The detected emotion is mapped to a curated music genre and song list
+5. The interaction is saved to the user's mood history in PostgreSQL
+6. Recommended songs are returned and displayed with play links
 
-| Emotion | Genre | Example Songs |
-|---------|-------|---------------|
-| 😊 Joy | Upbeat & Happy | Happy, Uptown Funk, Shake It Off |
-| 😢 Sadness | Soft & Soothing | Someone Like You, Fix You |
-| 😠 Anger | Rock & Powerful | Lose Yourself, Numb |
-| 😨 Fear | Calm & Ambient | Weightless, Clair de Lune |
-| 😲 Surprise | Energetic & Electronic | Blinding Lights, Levitating |
-| 🤢 Disgust | Refreshing & Uplifting | Here Comes the Sun |
-| 😐 Neutral | Lo-fi & Chill | Lofi Study Beats, Jazz Cafe |
+---
 
-## Usage
+## 🚀 Future Enhancements
 
-1. Sign up at `/signup`
-2. Log in at `/login`
-3. Open **Chat** and type how you're feeling (e.g. "I'm feeling really happy today!")
-4. MoodTune detects your emotion and shows 5 song recommendations
-5. Click ▶ to open songs on YouTube, or ♡ to save to Favourites
-6. View past sessions in **History** and insights in **Analytics**
+- Voice input support (speech-to-text)
+- Facial emotion recognition via webcam
+- Multilingual emotion detection
+- Spotify API integration for direct playback
+- Deployment on Vercel (frontend) + Render (backend)
 
-## Environment Variables
+---
 
-### Backend (`.env`)
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `DATABASE_URL` | `postgresql://postgres:1234@localhost:5432/moodtune` | PostgreSQL connection |
-| `SECRET_KEY` | `your_secret_key_here` | JWT signing key |
-| `ALGORITHM` | `HS256` | JWT algorithm |
-| `ACCESS_TOKEN_EXPIRE_MINUTES` | `1440` | Token expiry (24 hours) |
+## 👨‍💻 Author
 
-### Frontend (`.env`)
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `VITE_API_URL` | `http://localhost:8000` | Backend API URL |
+Built by **Sidhartha Reddy**
 
-## License
+---
 
-MIT
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
